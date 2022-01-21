@@ -1,0 +1,32 @@
+class AppAssetspath {
+  static String bmind = "assets/images/bmind.png";
+  static String talk = "assets/images/talk.png";
+  static String n = "assets/images/n.png";
+  static String mail = "assets/images/mail.png";
+  static String google = "assets/images/google.png";
+  static String comment = "assets/images/comment.png";
+  static String edit1 = "assets/images/edit.png";
+  static String upload = "assets/images/upload.png";
+  static String download = "assets/images/download.png";
+  static String logout = "assets/images/logout.png";
+  static String hear = "assets/images/hear.png";
+  static String cross = "assets/images/cross.png";
+  static String gool = "assets/images/gool.png";
+  static String hearingTestJoker = "assets/images/hearingTestJoker1x.png";
+  static String curve = "assets/images/curve.png";
+  static String soundWaves = "assets/images/line.png";
+  static String connectHead = "assets/images/connectHead1x.png";
+  static String settingMoon = "assets/images/deviceSettingMoon1x.png";
+  static String settingMute = "assets/images/deviceSettingMute1x.png";
+  static String ear = "assets/images/ear1x.png";
+  static String hearingProfileGraph = "assets/images/hearingGraph1x.png";
+  static String audioPath = "assets/audios/hello1.mp3";
+  static String request = "assets/images/request.png";
+  static String mypost = "assets/images/mypost.png";
+  static String place = "assets/images/place.png";
+  static String shops = "assets/images/shops.png";
+  static String directions = "assets/images/directions.png";
+  static String chat = "assets/images/chat.png";
+  static String edit = "assets/images/edit.png";
+  static String delete = "assets/images/delete.png";
+}

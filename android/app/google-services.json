@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "316418610606",
+    "project_id": "ecosurvival-110ab",
+    "storage_bucket": "ecosurvival-110ab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316418610606:android:03eb8d51f57448f612643f",
+        "android_client_info": {
+          "package_name": "com.tmk.ecosurvival"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316418610606-9nelk9576vmu3rd3fm193dflcs3b5an6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXHiPXQlNHcSfWZHG15QydiY84IJnS6TY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316418610606-9nelk9576vmu3rd3fm193dflcs3b5an6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
