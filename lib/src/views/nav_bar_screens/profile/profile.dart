@@ -21,7 +21,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:screenshot/screenshot.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key key}) : super(key: key);
@@ -34,7 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   double height;
   double width;
   bool isLoading = false;
-  ScreenshotController screenshotController = ScreenshotController();
   @override
   Widget build(BuildContext context) {
     height = MediaQuery.of(context).size.height;
@@ -64,10 +62,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                            imageUrl: CurrentAppUser.currentUserData.photo,
-                            fit: BoxFit.cover,
-                          ),
+                          child: CurrentAppUser.currentUserData.photo == ''
+                              ? Icon(
+                                  Icons.account_circle_rounded,
+                                  color: Colors.white,
+                                  size: 75,
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl:
+                                      CurrentAppUser.currentUserData.photo,
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                       SizedBox(
@@ -115,9 +120,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(
                     height: height * 0.01,
                   ),
-                  Screenshot(
-                    controller: screenshotController,
-                    child: Card(
+
+                  Card(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -132,15 +136,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 FavoritesScreen(),
                               );
                             }, iconData: Icons.favorite, iconColor: Colors.red),
-                            const Divider(thickness: 1),
-                            myCard('My Ads', AppAssetspath.request, () {
-                              AppNavigator.push(context, const MyAds());
-                            }),
+                            CurrentAppUser.currentUserData.role == 'buyer'
+                                ? const Divider(thickness: 1)
+                                : Container(),
+                            CurrentAppUser.currentUserData.role == 'buyer'
+                                ? myCard('My Ads', AppAssetspath.request, () {
+                                    AppNavigator.push(context, const MyAds());
+                                  })
+                                : Container()
                           ],
                         ),
                       ),
                     ),
-                  ),
+
                   SizedBox(
                     height: height * 0.01,
                   ),

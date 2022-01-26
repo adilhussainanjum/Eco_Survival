@@ -195,13 +195,15 @@ class MessageTile extends StatelessWidget {
                 ],
               ),
               if (currentUser.uid == message.ownerId)
-                CircleAvatar(
-                  radius: 20,
-                  backgroundColor: AppColor.primaryColor,
-                  child: const Icon(
-                    Icons.account_circle,
-                    size: 40,
-                    color: Colors.white,
+                SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: CachedNetworkImage(
+                      imageUrl: CurrentAppUser.currentUserData.photo,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
             ],
@@ -289,7 +291,7 @@ class MessageField extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         alignment: Alignment.center,
-        height: size.height * 0.08,
+        height: 60,
         width: size.width * 0.95,
         child: Row(
           children: [

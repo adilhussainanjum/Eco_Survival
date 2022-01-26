@@ -25,6 +25,13 @@ class CurrentAppUser extends AppUser with ChangeNotifier {
         CurrentAppUser.currentUserData.createdAt = data['created_at'];
         CurrentAppUser.currentUserData.photo = data['photo_url'];
         CurrentAppUser.currentUserData.messages = data['messages'];
+        CurrentAppUser.currentUserData.role = data['role'];
+        CurrentAppUser.currentUserData.lat = data['lat'];
+        CurrentAppUser.currentUserData.lng = data['lng'];
+        CurrentAppUser.currentUserData.phoneNumber = data['phone_number'];
+        CurrentAppUser.currentUserData.centerName =
+            data['recycling_center_name'];
+        CurrentAppUser.currentUserData.centerLocation = data['user_location'];
 
         notifyListeners();
       });

@@ -1,5 +1,6 @@
 import 'package:bmind/src/constants/app_color.dart';
 import 'package:bmind/src/modals/ad.dart';
+import 'package:bmind/src/modals/current_app_user.dart';
 import 'package:bmind/src/utils/app_navigator.dart';
 import 'package:bmind/src/utils/app_utils.dart';
 import 'package:bmind/src/utils/styles/text_styles.dart';
@@ -42,7 +43,10 @@ class _MyAdsState extends State<MyAds> {
         ),
       ),
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('ads').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('ads')
+              .where('user_id', isEqualTo: CurrentAppUser.currentUserData.uid)
+              .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -61,116 +65,128 @@ class _MyAdsState extends State<MyAds> {
             });
             return SizedBox(
               width: width,
-              child: Wrap(
-                  alignment: WrapAlignment.center,
-                  children: ads
-                      .map(
-                        (e) => SizedBox(
-                          width: width * 0.5,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  color: Colors.transparent),
-                              child: Card(
-                                child: InkWell(
-                                  onTap: () {
-                                    AppNavigator.push(
-                                        context, AdDetails(ad: e));
-                                  },
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 120,
-                                        width: width * 0.5 - 20,
-                                        child: ClipRRect(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(5)),
-                                          child: CachedNetworkImage(
-                                              imageUrl: e.photos[0],
-                                              fit: BoxFit.cover),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 4.0, top: 2, right: 4),
-                                        child: Row(
-                                          children: [
-                                            Text(e.title,
-                                                style:
-                                                    AppTextStyles.simpleText),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 4.0, top: 2, right: 4),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              child: e.status == true
-                                                  ? const Icon(Icons.done_all,
-                                                      color: Colors.green,
-                                                      size: 14)
-                                                  : Icon(
-                                                      Icons.fiber_manual_record,
-                                                      color:
-                                                          AppColor.errorColor,
-                                                      size: 14),
+              child: ads.isEmpty
+                  ? Center(child: Text('No Ads yet'))
+                  : Wrap(
+                      alignment: WrapAlignment.center,
+                      children: ads
+                          .map(
+                            (e) => SizedBox(
+                              width: width * 0.5,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5.0),
+                                      color: Colors.transparent),
+                                  child: Card(
+                                    child: InkWell(
+                                      onTap: () {
+                                        AppNavigator.push(
+                                            context, AdDetails(ad: e));
+                                      },
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 120,
+                                            width: width * 0.5 - 20,
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(5)),
+                                              child: CachedNetworkImage(
+                                                  imageUrl: e.photos[0],
+                                                  fit: BoxFit.cover),
                                             ),
-                                            e.status == true
-                                                ? Text('Sold',
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 4.0, top: 2, right: 4),
+                                            child: Row(
+                                              children: [
+                                                Text(e.title,
                                                     style: AppTextStyles
-                                                        .simpleText
-                                                        .copyWith(fontSize: 12))
-                                                : Text('Unsold',
+                                                        .simpleText),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 4.0, top: 2, right: 4),
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
+                                                  child: e.status == true
+                                                      ? const Icon(
+                                                          Icons.done_all,
+                                                          color: Colors.green,
+                                                          size: 14)
+                                                      : Icon(
+                                                          Icons
+                                                              .fiber_manual_record,
+                                                          color: AppColor
+                                                              .errorColor,
+                                                          size: 14),
+                                                ),
+                                                e.status == true
+                                                    ? Text('Sold',
+                                                        style: AppTextStyles
+                                                            .simpleText
+                                                            .copyWith(
+                                                                fontSize: 12))
+                                                    : Text('Unsold',
+                                                        style: AppTextStyles
+                                                            .simpleText
+                                                            .copyWith(
+                                                                fontSize: 12)),
+                                                const Expanded(
+                                                    child: SizedBox()),
+                                                Text(e.price,
                                                     style: AppTextStyles
                                                         .simpleText
                                                         .copyWith(
-                                                            fontSize: 12)),
-                                            const Expanded(child: SizedBox()),
-                                            Text(e.price,
-                                                style: AppTextStyles.simpleText
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                            Text('(INR)',
-                                                style: AppTextStyles.simpleText
-                                                    .copyWith(fontSize: 12))
-                                          ],
-                                        ),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                Text('(INR)',
+                                                    style: AppTextStyles
+                                                        .simpleText
+                                                        .copyWith(fontSize: 12))
+                                              ],
+                                            ),
+                                          ),
+                                          const Divider(
+                                            thickness: 1,
+                                            endIndent: 10,
+                                            indent: 10,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 4.0, top: 2, right: 4),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                    DateFormat('yMMMd').format(
+                                                        e.createdAt.toDate()),
+                                                    style: AppTextStyles
+                                                        .simpleText
+                                                        .copyWith(
+                                                            fontSize: 10)),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      const Divider(
-                                        thickness: 1,
-                                        endIndent: 10,
-                                        indent: 10,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 4.0, top: 2, right: 4),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                                DateFormat('yMMMd').format(
-                                                    e.createdAt.toDate()),
-                                                style: AppTextStyles.simpleText
-                                                    .copyWith(fontSize: 10)),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      )
-                      .toList()),
+                          )
+                          .toList()),
             );
           }),
     );

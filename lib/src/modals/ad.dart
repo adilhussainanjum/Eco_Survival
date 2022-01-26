@@ -9,7 +9,10 @@ class Ad {
   String userId;
   Timestamp createdAt;
   bool status;
+  double lat;
+  double lng;
   List<dynamic> photos;
+  double distance;
 
   Ad(
       {this.id,
@@ -20,7 +23,9 @@ class Ad {
       this.userId,
       this.createdAt,
       this.photos,
-      this.status});
+      this.status,
+      this.lat,
+      this.lng});
 
   static Ad fromMap(Map<String, dynamic> map) {
     Ad ad = Ad();
@@ -33,6 +38,8 @@ class Ad {
     ad.createdAt = map['created_at'];
     ad.photos = map['photo_url'];
     ad.status = map['status'];
+    ad.lat = map['lat'];
+    ad.lng = map['lng'];
     return ad;
   }
 }

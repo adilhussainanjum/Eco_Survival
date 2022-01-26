@@ -1,6 +1,7 @@
 import 'package:bmind/src/constants/app_color.dart';
 import 'package:bmind/src/constants/assets_path.dart';
 import 'package:bmind/src/modals/app_user.dart';
+import 'package:bmind/src/modals/artical.dart';
 import 'package:bmind/src/modals/comments.dart';
 import 'package:bmind/src/modals/current_app_user.dart';
 import 'package:bmind/src/modals/post.dart';
@@ -11,10 +12,12 @@ import 'package:bmind/src/utils/text_field.dart';
 import 'package:bmind/src/views/nav_bar_screens/Home/add_post.dart';
 import 'package:bmind/src/views/nav_bar_screens/Home/comment.dart';
 import 'package:bmind/src/views/nav_bar_screens/Home/edit_post.dart';
+import 'package:bmind/src/views/nav_bar_screens/Home/my_article.dart';
 import 'package:bmind/src/views/nav_bar_screens/Home/report_post.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:intl/intl.dart';
 
 class CommunityScreen extends StatefulWidget {
@@ -32,7 +35,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   @override
   void initState() {
     CurrentAppUser.currentUserData.addListener(() {
-      setState(() {});
+      //setState(() {});
     });
     super.initState();
   }
@@ -62,6 +65,82 @@ class _CommunityScreenState extends State<CommunityScreen> {
               width: width * 0.95,
               child: Column(
                 children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                            Text('Articles', style: AppTextStyles.headingText),
+                      ),
+                    ],
+                  ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('articles')
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return const Text('Something went wrong!');
+                        }
+                        if (!snapshot.hasData) {
+                          return const Text("No Data Found");
+                        }
+                        List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                            docList = snapshot.data.docs;
+                        List<Article> articles = [];
+                        docList.forEach((element) {
+                          Article a = Article.fromMap(element.data());
+                          articles.add(a);
+                        });
+
+                        return SizedBox(
+                            width: width,
+                            height: height * 0.15,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data.docs.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  Article a = Article.fromMap(
+                                      (snapshot.data.docs[index].data()
+                                          as Map<String, dynamic>));
+
+                                  return Card(
+                                    child: InkWell(
+                                      onTap: () {
+                                        AppNavigator.push(
+                                            context, MyArticle(a));
+                                      },
+                                      child: SizedBox(
+                                          width: width * 0.35,
+                                          child: Center(
+                                              child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Html(
+                                              data: a.article,
+                                              // maxLines: 1,
+                                              // overflow: TextOverflow.ellipsis,
+                                              // softWrap: false,
+                                            ),
+                                          ))),
+                                    ),
+                                  );
+                                }));
+                      }),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child:
+                            Text('Community', style: AppTextStyles.headingText),
+                      ),
+                    ],
+                  ),
                   FutureBuilder(
                       future: FirebaseFirestore.instance
                           .collection('posts')
@@ -138,13 +217,22 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     SizedBox(
                       height: 50,
                       width: 50,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: CachedNetworkImage(
-                          imageUrl: u.photo,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                      child: u.photo == ''
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Icon(
+                                Icons.account_circle_rounded,
+                                size: 50,
+                                color: AppColor.greyColor,
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: CachedNetworkImage(
+                                imageUrl: u.photo,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(

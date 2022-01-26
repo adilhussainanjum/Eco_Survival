@@ -28,100 +28,120 @@ class _SignupScreenState extends State<SignupScreen> {
     height = MediaQuery.of(context).size.height;
     width = MediaQuery.of(context).size.width;
     return Scaffold(
-        body: ModalProgressHUD(
-      inAsyncCall: isLoading,
-      child: SingleChildScrollView(
-        child: Center(
-          child: SizedBox(
-            width: 0.9 * width,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: height * 0.1,
+        floatingActionButton: InkWell(
+          onTap: () {
+            AppNavigator.push(context, SellerSignup());
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ClipRRect(
+                child: Image.asset(
+                  AppAssetspath.recycle,
+                  fit: BoxFit.cover,
+                  height: height * 0.03,
+                  width: height * 0.03,
                 ),
-                ClipRRect(
-                  child: Image.asset(
-                    AppAssetspath.bmind,
-                    fit: BoxFit.cover,
-                    height: height * 0.03,
-                  ),
-                ),
-                SizedBox(
-                  height: height * 0.1,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Sign up',
-                      style: AppTextStyles.headingText,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'First time Registering an account?',
-                      style: AppTextStyles.simpleText,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Please Sign in using the applications below.',
-                      style: AppTextStyles.simpleText,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: height * 0.1,
-                ),
-                InkWell(
-                    onTap: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      User user =
-                          await AuthenticationService(FirebaseAuth.instance)
-                              .signInWithGoogle();
-                      if (user != null) {
-                        AppNavigator.makeFirst(
-                            context,
-                            NavBarScreen(
-                              initIndex: 0,
-                            ));
-                      } else {
-                        AppUtils.showToast('Login failed!');
-                      }
-                      setState(() {
-                        isLoading = false;
-                      });
-                    },
-                    child: myContainer(AppAssetspath.google, 'Google Login.')),
-                InkWell(
-                  onTap: () {
-                    AppNavigator.push(context, BuyerSingnup());
-                  },
-                  child: myContainer(AppAssetspath.mail, 'Register As Buyer.'),
-                ),
-                InkWell(
-                  onTap: () {
-                    AppNavigator.push(context, SellerSignup());
-                  },
-                  child: myContainer(AppAssetspath.mail, 'Register As Seller.'),
-                )
-              ],
-            ),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                'Register As Recycle Center.',
+                style:
+                    TextStyle(color: Colors.teal, fontWeight: FontWeight.bold),
+              )
+            ],
           ),
         ),
-      ),
-    ));
+        body: ModalProgressHUD(
+          inAsyncCall: isLoading,
+          child: SingleChildScrollView(
+            child: Center(
+              child: SizedBox(
+                width: 0.9 * width,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: height * 0.1,
+                    ),
+                    ClipRRect(
+                      child: Image.asset(
+                        AppAssetspath.bmind,
+                        fit: BoxFit.cover,
+                        height: height * 0.08,
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * 0.1,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Sign up',
+                          style: AppTextStyles.headingText,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'First time Registering an account?',
+                          style: AppTextStyles.simpleText,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Please Sign in using the applications below.',
+                          style: AppTextStyles.simpleText,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: height * 0.1,
+                    ),
+                    InkWell(
+                        onTap: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          User user =
+                              await AuthenticationService(FirebaseAuth.instance)
+                                  .signInWithGoogle();
+                          if (user != null) {
+                            AppNavigator.makeFirst(
+                                context,
+                                NavBarScreen(
+                                  initIndex: 0,
+                                ));
+                          } else {
+                            AppUtils.showToast('Login failed!');
+                          }
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        child:
+                            myContainer(AppAssetspath.google, 'Google Login.')),
+                    InkWell(
+                      onTap: () {
+                        AppNavigator.push(context, BuyerSingnup());
+                      },
+                      child: myContainer(
+                          AppAssetspath.mail, 'Register wit email.'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 
   Padding myContainer(String name, String text) {

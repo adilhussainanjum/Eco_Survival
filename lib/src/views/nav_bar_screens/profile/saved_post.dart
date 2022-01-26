@@ -1,4 +1,3 @@
-
 import 'package:bmind/src/constants/app_color.dart';
 import 'package:bmind/src/constants/assets_path.dart';
 import 'package:bmind/src/modals/app_user.dart';
@@ -28,8 +27,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   double height;
   double width;
 
-  TextEditingController _commentController= TextEditingController();
-  
+  TextEditingController _commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +35,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     width = MediaQuery.of(context).size.width;
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppUtils.appBar(false, 'Community', context),
+        appBar: AppUtils.appBar(false, 'My Favourites', context),
         floatingActionButton: InkWell(
           onTap: () {
             AppNavigator.push(context, const AddPost());
@@ -59,7 +57,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   FutureBuilder(
                       future: FirebaseFirestore.instance
                           .collection('posts')
-                          .where('likes', arrayContains: CurrentAppUser.currentUserData.uid)
+                          .where('likes',
+                              arrayContains: CurrentAppUser.currentUserData.uid)
                           .get(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -82,12 +81,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           posts.add(p);
                         });
 
-                        return Column(
-                            children: posts
-                                .map(
-                                  (e) => postCard(e),
-                                )
-                                .toList());
+                        return SizedBox(
+                          child: posts.isEmpty
+                              ? const Center(child: Text('No liked post yet'))
+                              : Column(
+                                  children: posts
+                                      .map(
+                                        (e) => postCard(e),
+                                      )
+                                      .toList()),
+                        );
                       }),
                 ],
               ),
@@ -132,13 +135,22 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     SizedBox(
                       height: 50,
                       width: 50,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: CachedNetworkImage(
-                          imageUrl: u.photo,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                      child: u.photo == ''
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Icon(
+                                Icons.account_circle_rounded,
+                                size: 50,
+                                color: AppColor.greyColor,
+                              ),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: CachedNetworkImage(
+                                imageUrl: u.photo,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -266,10 +278,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                       comments.add(p);
                                     });
 
-                                    return Text(
-                                                '${comments.length}',
-                                                style:
-                                                    AppTextStyles.simpleText);
+                                    return Text('${comments.length}',
+                                        style: AppTextStyles.simpleText);
                                   }),
                               SizedBox(width: width * 0.1),
                               InkWell(
@@ -351,45 +361,64 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                         Comments.fromMap(element.data());
                                     comments.add(p);
                                   });
-                                  return Column(
-                                      children: [...comments
-                                          .map(
-                                            (e) => AnimatedSwitcher(
-                                                duration: const Duration(
-                                                    milliseconds: 300),
-                                                child: p.show
-                                                    ? CommentField(
-                                                        comment: e,
-                                                      )
-                                                    : SizedBox()),
-                                          )
-                                          .toList(),
-                                            p.show?StatefulBuilder(builder: (context, state) {
-            return GestureDetector(
-              child: myTextField(
-                  label: 'Tap here to Write your Comment',
-                  controller: _commentController,
-                  suffixiconbutton:
-                      IconButton(onPressed: () {
-                        if(_commentController.text.isNotEmpty){
-                        DocumentReference docRef = FirebaseFirestore.instance.collection('posts').doc(p.id).collection('comments').doc();
-                          docRef.set(
-                            {
-                              'created_at' : Timestamp.now(),
-                              'user_id' : CurrentAppUser.currentUserData.uid,
-                              'title' : _commentController.text, 
-                              'comment_id': docRef.id, 
-                            }
-                          );
-                          _commentController.clear();
-                        }
-                      }, icon: Icon(Icons.send))),
-            );
-          }):SizedBox()
-        
-                                          ]
-
-                                          );
+                                  return Column(children: [
+                                    ...comments
+                                        .map(
+                                          (e) => AnimatedSwitcher(
+                                              duration: const Duration(
+                                                  milliseconds: 300),
+                                              child: p.show
+                                                  ? CommentField(
+                                                      comment: e,
+                                                    )
+                                                  : SizedBox()),
+                                        )
+                                        .toList(),
+                                    p.show
+                                        ? StatefulBuilder(
+                                            builder: (context, state) {
+                                            return GestureDetector(
+                                              child: myTextField(
+                                                  label:
+                                                      'Tap here to Write your Comment',
+                                                  controller:
+                                                      _commentController,
+                                                  suffixiconbutton: IconButton(
+                                                      onPressed: () {
+                                                        if (_commentController
+                                                            .text.isNotEmpty) {
+                                                          DocumentReference
+                                                              docRef =
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      'posts')
+                                                                  .doc(p.id)
+                                                                  .collection(
+                                                                      'comments')
+                                                                  .doc();
+                                                          docRef.set({
+                                                            'created_at':
+                                                                Timestamp.now(),
+                                                            'user_id':
+                                                                CurrentAppUser
+                                                                    .currentUserData
+                                                                    .uid,
+                                                            'title':
+                                                                _commentController
+                                                                    .text,
+                                                            'comment_id':
+                                                                docRef.id,
+                                                          });
+                                                          _commentController
+                                                              .clear();
+                                                        }
+                                                      },
+                                                      icon: Icon(Icons.send))),
+                                            );
+                                          })
+                                        : SizedBox()
+                                  ]);
                                 });
                           }),
                         ],

@@ -285,7 +285,9 @@ class _NewAdState extends State<NewAd> {
       'price': _priceController.text,
       'category': chosenValueDrop,
       'photo_url': urls,
-      'status': false
+      'status': false,
+      'lat': CurrentAppUser.currentUserData.lat,
+      'lng': CurrentAppUser.currentUserData.lng
     });
   }
 }

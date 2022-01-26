@@ -1,7 +1,9 @@
 import 'package:bmind/src/constants/app_color.dart';
+import 'package:bmind/src/constants/assets_path.dart';
+import 'package:bmind/src/modals/current_app_user.dart';
 import 'package:bmind/src/utils/app_navigator.dart';
 import 'package:bmind/src/utils/styles/text_styles.dart';
-import 'package:bmind/src/views/setting/setting.dart';
+import 'package:bmind/src/views/nav_bar_screens/chat/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -122,12 +124,17 @@ class AppUtils {
             ? <Widget>[
                 InkWell(
                   onTap: () {
-                    AppNavigator.push(context, SettingScreen());
+                    AppNavigator.push(context, ChatScreen());
                   },
-                  child: Icon(
-                    Icons.settings_outlined,
-                    color: AppColor.whiteColor,
-                  ),
+                  child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: ClipRRect(
+                        child: Image.asset(
+                          AppAssetspath.chat,
+                          height: 20,
+                          width: 20,
+                        ),
+                      )),
                 ),
                 const SizedBox(
                   width: 10,

@@ -29,4 +29,5 @@ class AppAssetspath {
   static String chat = "assets/images/chat.png";
   static String edit = "assets/images/edit.png";
   static String delete = "assets/images/delete.png";
+  static String recycle = "assets/images/recycle.png";
 }

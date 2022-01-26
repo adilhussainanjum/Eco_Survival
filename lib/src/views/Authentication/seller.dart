@@ -44,7 +44,7 @@ class _SellerSignupState extends State<SellerSignup> {
   final ImagePicker _picker = ImagePicker();
   File image;
   String url;
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class _SellerSignupState extends State<SellerSignup> {
                         height: height * 0.03,
                       ),
                       Text(
-                        'Register As Seller',
+                        'Register your Recycle Center',
                         style: AppTextStyles.headingText,
                       ),
                       SizedBox(

@@ -14,32 +14,32 @@ import 'package:badges/badges.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ChatScreen extends StatelessWidget {
-  final CurrentAppUser currentuser;
-
-  const ChatScreen({Key key, @required this.currentuser}) : super(key: key);
+  const ChatScreen({
+    Key key,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: InkWell(
-        onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => NewChat()));
-        },
-        child: CircleAvatar(
-            backgroundColor: AppColor.primaryColor,
-            radius: 22,
-            child: Icon(Icons.add, color: Colors.white)),
-      ),
+      // floatingActionButton: InkWell(
+      //   onTap: () {
+      //     Navigator.of(context)
+      //         .push(MaterialPageRoute(builder: (context) => NewChat()));
+      //   },
+      //   child: CircleAvatar(
+      //       backgroundColor: AppColor.primaryColor,
+      //       radius: 22,
+      //       child: Icon(Icons.add, color: Colors.white)),
+      // ),
       appBar: AppUtils.appBar(false, 'Chats', context),
       backgroundColor: Colors.white,
       body: FutureBuilder(
         future: FirebaseFirestore.instance
             .collection('users')
             .where(
-              'uid',
-              whereIn: currentuser.messages.isEmpty
+              'user_id',
+              whereIn: CurrentAppUser.currentUserData.messages.isEmpty
                   ? ['placehodter']
-                  : currentuser.messages,
+                  : CurrentAppUser.currentUserData.messages,
             )
             .get(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -52,6 +52,7 @@ class ChatScreen extends StatelessWidget {
           snapshot.data.docs.forEach((element) {
             messagesList.add(AppUser.fromMap(element.data()));
           });
+          print(messagesList);
           return messagesList.isEmpty
               ? Center(
                   child: Text('Message Someone'),
@@ -84,9 +85,8 @@ class ChatScreen extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('users')
-            .doc(currentuser.uid)
+            .doc(CurrentAppUser.currentUserData.uid)
             .collection(e.uid)
-            // .orderBy('createdAt')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -100,7 +100,7 @@ class ChatScreen extends StatelessWidget {
           });
           int unRead = messagesList
               .where((msg) {
-                if (msg.ownerId != currentuser.uid) {
+                if (msg.ownerId != CurrentAppUser.currentUserData.uid) {
                   if (!(msg.seen)) {
                     return true;
                   } else {
@@ -166,13 +166,15 @@ class ChatScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              leading: CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.red,
-                child: Icon(
-                  Icons.account_circle,
-                  size: 40,
-                  color: Colors.white,
+              leading: SizedBox(
+                height: 40,
+                width: 40,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: CachedNetworkImage(
+                    imageUrl: e.photo,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -184,7 +186,7 @@ class ChatScreen extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => ChattingScreen(
         appUser: e,
-        currentUser: currentuser,
+        currentUser: CurrentAppUser.currentUserData,
       ),
     ));
   }

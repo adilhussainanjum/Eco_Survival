@@ -134,22 +134,14 @@ class _RecyclingCenterState extends State<RecyclingCenter> {
                   )),
               const SizedBox(width: 8),
               FittedBox(
-                child: Text(
-                  '${user.centerLocation}',
-                  style: AppTextStyles.simpleText.copyWith(fontSize: 14),
+                child: SizedBox(
+                  width: width * 0.75,
+                  child: Text(
+                    '${user.centerLocation}',
+                    style: AppTextStyles.simpleText.copyWith(fontSize: 14),
+                  ),
                 ),
               ),
-              const Expanded(
-                child: SizedBox(),
-              ),
-              // Align(
-              //   alignment: Alignment.centerRight,
-              //   child: Icon(
-              //     Icons.navigate_next,
-              //     color: AppColor.fadeColor,
-              //     size: 30,
-              //   ),
-              // ),
             ],
           ),
           Row(
