@@ -67,7 +67,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: Image.asset(
                         AppAssetspath.bmind,
                         fit: BoxFit.cover,
-                        height: height * 0.08,
+                        height: height * 0.1,
                       ),
                     ),
                     SizedBox(
@@ -134,7 +134,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         AppNavigator.push(context, BuyerSingnup());
                       },
                       child: myContainer(
-                          AppAssetspath.mail, 'Register wit email.'),
+                          AppAssetspath.mail, 'Register with email.'),
                     ),
                   ],
                 ),

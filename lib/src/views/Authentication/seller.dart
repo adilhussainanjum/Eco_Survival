@@ -342,6 +342,9 @@ class _SellerSignupState extends State<SellerSignup> {
                           setState(() {});
                         }
                       }, AppColor.primaryColor, width * 0.75),
+                      SizedBox(
+                        height: height * 0.02,
+                      ),
                     ],
                   ),
                 ),

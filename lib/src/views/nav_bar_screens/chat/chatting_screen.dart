@@ -74,7 +74,8 @@ class ChattingScreen extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 70.0),
                             child: ListView.builder(
-                              controller: _controller,
+                              reverse: true,
+                              // controller: _controller,
                               shrinkWrap: true,
                               itemCount: messagesList.length,
                               itemBuilder: (BuildContext context, int index) {
@@ -133,9 +134,29 @@ class MessageTile extends StatelessWidget {
                 : MainAxisAlignment.start,
             children: [
               (currentUser.uid != message.ownerId)
-                  ? Icon(Icons.account_circle)
+                  ? user.photo != ''
+                      ? SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: CachedNetworkImage(
+                              imageUrl: user.photo,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        )
+                      : CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.grey,
+                          child: Icon(
+                            Icons.account_circle,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        )
                   : Padding(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 15, bottom: 5),
                       child: Text(
                         DateTime.parse(message.createdAt).day ==
                                 Timestamp.now().toDate().day
@@ -148,51 +169,56 @@ class MessageTile extends StatelessWidget {
                             color: const Color(0xff6B6B6B)),
                       ),
                     ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: message.ownerId == currentUser.uid
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '  ${user.name}',
-                    style: TextStyle(
-                        fontSize: size.width * 0.04,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xff6B6B6B)),
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        padding: EdgeInsets.all(7),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Color(0xffEFEDED)),
-                        child: Text(
-                          message.message,
-                          style: TextStyle(fontSize: size.width * 0.04),
+              Padding(
+                padding: EdgeInsets.only(left: 5, right: 5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: message.ownerId == currentUser.uid
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      message.ownerId == currentUser.uid
+                          ? '  ${currentUser.name}'
+                          : '  ${user.name}',
+                      style: TextStyle(
+                          fontSize: size.width * 0.04,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xff6B6B6B)),
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          padding: EdgeInsets.all(7),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Color(0xffEFEDED)),
+                          child: Text(
+                            message.message,
+                            style: TextStyle(fontSize: size.width * 0.04),
+                          ),
                         ),
-                      ),
-                      if (currentUser.uid != message.ownerId)
-                        Text(
-                          DateTime.parse(message.createdAt).day ==
-                                  Timestamp.now().toDate().day
-                              ? DateFormat(' hh:mm a')
-                                  .format(DateTime.parse(message.createdAt))
-                              : DateFormat(' dd MMM, hh:mm a')
-                                  .format(DateTime.parse(message.createdAt)),
-                          style: TextStyle(
-                              fontSize: size.width * 0.02,
-                              color: const Color(0xff6B6B6B)),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 3,
-                  ),
-                ],
+                        if (currentUser.uid != message.ownerId)
+                          Text(
+                            DateTime.parse(message.createdAt).day ==
+                                    Timestamp.now().toDate().day
+                                ? DateFormat(' hh:mm a')
+                                    .format(DateTime.parse(message.createdAt))
+                                : DateFormat(' dd MMM, hh:mm a')
+                                    .format(DateTime.parse(message.createdAt)),
+                            style: TextStyle(
+                                fontSize: size.width * 0.02,
+                                color: const Color(0xff6B6B6B)),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                  ],
+                ),
               ),
               if (currentUser.uid == message.ownerId)
                 SizedBox(
@@ -287,11 +313,11 @@ class MessageField extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20.0),
+      padding: const EdgeInsets.only(bottom: 0.0),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         alignment: Alignment.center,
-        height: 60,
+        height: size.height * 0.08,
         width: size.width * 0.95,
         child: Row(
           children: [
