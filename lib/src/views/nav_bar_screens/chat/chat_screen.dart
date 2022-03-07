@@ -32,52 +32,58 @@ class ChatScreen extends StatelessWidget {
       // ),
       appBar: AppUtils.appBar(false, 'Chats', context),
       backgroundColor: Colors.white,
-      body: FutureBuilder(
-        future: FirebaseFirestore.instance
-            .collection('users')
-            .where(
-              'user_id',
-              whereIn: CurrentAppUser.currentUserData.messages.isEmpty
-                  ? ['placehodter']
-                  : CurrentAppUser.currentUserData.messages,
-            )
-            .get(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          final List<AppUser> messagesList = [];
-          snapshot.data.docs.forEach((element) {
-            messagesList.add(AppUser.fromMap(element.data()));
-          });
-          print(messagesList);
-          return messagesList.isEmpty
-              ? Center(
-                  child: Text('Message Someone'),
-                )
-              : ListView(
-                  children: messagesList.map((e) {
-                    return messagesList.first == e
-                        ? Column(children: [
-                            // Align(
-                            //   alignment: Alignment.topLeft,
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.all(13.0),
-                            //     child: Text(
-                            //       'Chats',
-                            //       //style: AppTextStyle.boldTextStyle
-                            //     ),
-                            //   ),
-                            // ),
-                            messageItem(e)
-                          ])
-                        : messageItem(e);
-                  }).toList(),
-                );
-        },
-      ),
+      body: StatefulBuilder(builder: (context, state) {
+        CurrentAppUser.currentUserData.addListener(() {
+          state(() {});
+        });
+        return StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .where(
+                'user_id',
+                whereIn: CurrentAppUser.currentUserData.messages.isEmpty
+                    ? ['placehodter']
+                    : CurrentAppUser.currentUserData.messages,
+              )
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final List<AppUser> messagesList = [];
+            snapshot.data.docs.forEach((element) {
+              messagesList.add(AppUser.fromMap(element.data()));
+            });
+            print(messagesList);
+            return messagesList.isEmpty
+                ? Center(
+                    child: Text('No chat Avialable'),
+                  )
+                : ListView(
+                    children: messagesList.map((e) {
+                      return messagesList.first == e
+                          ? Column(children: [
+                              // Align(
+                              //   alignment: Alignment.topLeft,
+                              //   child: Padding(
+                              //     padding: const EdgeInsets.all(13.0),
+                              //     child: Text(
+                              //       'Chats',
+                              //       //style: AppTextStyle.boldTextStyle
+                              //     ),
+                              //   ),
+                              // ),
+                              messageItem(e)
+                            ])
+                          : messageItem(e);
+                    }).toList(),
+                  );
+          },
+        );
+      }),
     );
   }
 
@@ -87,6 +93,7 @@ class ChatScreen extends StatelessWidget {
             .collection('users')
             .doc(CurrentAppUser.currentUserData.uid)
             .collection(e.uid)
+            .orderBy('createdAt')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -183,7 +190,7 @@ class ChatScreen extends StatelessWidget {
   }
 
   void onMsgItemtab(AppUser e, BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
+    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
       builder: (context) => ChattingScreen(
         appUser: e,
         currentUser: CurrentAppUser.currentUserData,

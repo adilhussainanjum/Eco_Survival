@@ -65,73 +65,74 @@ class _CommunityScreenState extends State<CommunityScreen> {
               width: width * 0.95,
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child:
-                            Text('Articles', style: AppTextStyles.headingText),
-                      ),
-                    ],
-                  ),
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('articles')
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        if (snapshot.hasError) {
-                          return const Text('Something went wrong!');
-                        }
-                        if (!snapshot.hasData) {
-                          return const Text("No Data Found");
-                        }
-                        List<QueryDocumentSnapshot<Map<String, dynamic>>>
-                            docList = snapshot.data.docs;
-                        List<Article> articles = [];
-                        docList.forEach((element) {
-                          Article a = Article.fromMap(element.data());
-                          articles.add(a);
-                        });
+                  // Row(
+                  //   children: [
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child:
+                  //           Text('Articles', style: AppTextStyles.headingText),
+                  //     ),
+                  //   ],
+                  // ),
+                  // StreamBuilder(
+                  //     stream: FirebaseFirestore.instance
+                  //         .collection('articles')
+                  //         .snapshots(),
+                  //     builder: (context, snapshot) {
+                  //       if (snapshot.connectionState ==
+                  //           ConnectionState.waiting) {
+                  //         return const Center(
+                  //             child: CircularProgressIndicator());
+                  //       }
+                  //       if (snapshot.hasError) {
+                  //         return const Text('Something went wrong!');
+                  //       }
+                  //       if (!snapshot.hasData) {
+                  //         return const Text("No Data Found");
+                  //       }
+                  //       List<QueryDocumentSnapshot<Map<String, dynamic>>>
+                  //           docList = snapshot.data.docs;
+                  //       List<Article> articles = [];
+                  //       docList.forEach((element) {
+                  //         Article a = Article.fromMap(element.data());
+                  //         articles.add(a);
+                  //       });
 
-                        return SizedBox(
-                            width: width,
-                            height: height * 0.15,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.docs.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  Article a = Article.fromMap(
-                                      (snapshot.data.docs[index].data()
-                                          as Map<String, dynamic>));
+                  //       return SizedBox(
+                  //           width: width,
+                  //           height: height * 0.15,
+                  //           child: ListView.builder(
+                  //               shrinkWrap: true,
+                  //               scrollDirection: Axis.horizontal,
+                  //               itemCount: snapshot.data.docs.length,
+                  //               itemBuilder: (BuildContext context, int index) {
+                  //                 Article a = Article.fromMap(
+                  //                     (snapshot.data.docs[index].data()
+                  //                         as Map<String, dynamic>));
 
-                                  return Card(
-                                    child: InkWell(
-                                      onTap: () {
-                                        AppNavigator.push(
-                                            context, MyArticle(a));
-                                      },
-                                      child: SizedBox(
-                                          width: width * 0.35,
-                                          child: Center(
-                                              child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Html(
-                                              data: a.article,
-                                              // maxLines: 1,
-                                              // overflow: TextOverflow.ellipsis,
-                                              // softWrap: false,
-                                            ),
-                                          ))),
-                                    ),
-                                  );
-                                }));
-                      }),
+                  //                 return Card(
+                  //                   child: InkWell(
+                  //                     onTap: () {
+                  //                       AppNavigator.push(
+                  //                           context, MyArticle(a));
+                  //                     },
+                  //                     child: SizedBox(
+                  //                         width: width * 0.35,
+                  //                         child: Center(
+                  //                             child: Padding(
+                  //                           padding: const EdgeInsets.all(8.0),
+                  //                           child: Html(
+                  //                             data: a.article,
+                  //                             // maxLines: 1,
+                  //                             // overflow: TextOverflow.ellipsis,
+                  //                             // softWrap: false,
+                  //                           ),
+                  //                         ))),
+                  //                   ),
+                  //                 );
+                  //               }));
+                  //     }),
+
                   Row(
                     children: [
                       Padding(

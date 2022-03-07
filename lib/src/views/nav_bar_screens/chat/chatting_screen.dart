@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 class ChattingScreen extends StatelessWidget {
   final AppUser appUser;
   final CurrentAppUser currentUser;
+  final TextEditingController controller = TextEditingController();
 
   ChattingScreen({
     Key key,
@@ -27,69 +28,69 @@ class ChattingScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppUtils.appBar(false, appUser.name, context),
-        floatingActionButton: Container(
-          color: Colors.white,
-          child: MessageField(
-            appUser: appUser,
-            currentUser: currentUser,
-          ),
+        floatingActionButton: MessageField(
+          appUser: appUser,
+          currentUser: currentUser,
+          controller: this.controller,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: Column(
           children: [
-            Container(
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(currentUser.uid)
-                    .collection(appUser.uid)
-                    .orderBy('createdAt', descending: true)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  final List<Message> messagesList = [];
-                  snapshot.data.docs.forEach((element) {
-                    messagesList.add(Message.fromMap(element.data()));
-                  });
-                  updateStatus(snapshot.data.docs);
-                  Future.delayed(Duration(seconds: 1), () {
-                    _controller.animateTo(
-                      _controller.position.maxScrollExtent,
-                      duration: Duration(microseconds: 1),
-                      curve: Curves.fastOutSlowIn,
-                    );
-                  });
-                  return messagesList.isEmpty
-                      ? const Expanded(
-                          child: Center(
-                            child: Text('Start the Conversation'),
-                          ),
-                        )
-                      : Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 70.0),
-                            child: ListView.builder(
-                              reverse: true,
-                              // controller: _controller,
-                              shrinkWrap: true,
-                              itemCount: messagesList.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return MessageTile(
-                                    message: messagesList[index],
-                                    currentUser: currentUser,
-                                    user: appUser);
-                              },
+            StatefulBuilder(builder: (context, stst) {
+              return Container(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .doc(currentUser.uid)
+                      .collection(appUser.uid)
+                      .orderBy('createdAt', descending: true)
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    final List<Message> messagesList = [];
+                    snapshot.data.docs.forEach((element) {
+                      messagesList.add(Message.fromMap(element.data()));
+                    });
+                    updateStatus(snapshot.data.docs);
+                    // Future.delayed(Duration(seconds: 1), () {
+                    //   _controller.animateTo(
+                    //     _controller.position.maxScrollExtent,
+                    //     duration: Duration(microseconds: 1),
+                    //     curve: Curves.fastOutSlowIn,
+                    //   );
+                    // });
+                    return messagesList.isEmpty
+                        ? const Expanded(
+                            child: Center(
+                              child: Text('Start the Conversation'),
                             ),
-                          ),
-                        );
-                },
-              ),
-            ),
+                          )
+                        : Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 70.0),
+                              child: ListView.builder(
+                                reverse: true,
+                                //controller: _controller,
+                                shrinkWrap: true,
+                                itemCount: messagesList.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return MessageTile(
+                                      message: messagesList[index],
+                                      currentUser: currentUser,
+                                      user: appUser);
+                                },
+                              ),
+                            ),
+                          );
+                  },
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -221,17 +222,27 @@ class MessageTile extends StatelessWidget {
                 ),
               ),
               if (currentUser.uid == message.ownerId)
-                SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: CachedNetworkImage(
-                      imageUrl: CurrentAppUser.currentUserData.photo,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                currentUser.photo != ''
+                    ? SizedBox(
+                        height: 40,
+                        width: 40,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: CachedNetworkImage(
+                            imageUrl: CurrentAppUser.currentUserData.photo,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                    : CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.grey,
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      )
             ],
           ),
         ),
@@ -301,21 +312,22 @@ class MessageTile extends StatelessWidget {
 class MessageField extends StatelessWidget {
   final AppUser appUser;
   final CurrentAppUser currentUser;
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController controller;
 
   MessageField({
     Key key,
     @required this.appUser,
     @required this.currentUser,
+    @required this.controller,
   }) : super(key: key);
-
+  Size size;
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(bottom: 0.0),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         alignment: Alignment.center,
         height: size.height * 0.08,
         width: size.width * 0.95,
@@ -326,10 +338,10 @@ class MessageField extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: AppColor.primaryColor, // red as border color
+                    color: AppColor.primaryColor,
                   ),
                 ),
-                child: TextField(
+                child: TextFormField(
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
                   controller: controller,

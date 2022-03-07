@@ -7,12 +7,73 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:316418610606:android:d206d8bc1e3721dd12643f",
+        "android_client_info": {
+          "package_name": "com.tmk.eco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "316418610606-dvenuc028nu5inlra7p1n3crchpvlib8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tmk.eco",
+            "certificate_hash": "39a4d658d749e419526cd515db78741c0ea60b59"
+          }
+        },
+        {
+          "client_id": "316418610606-qb7eof6b8i1uksjgm9f23p8gkurcj498.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tmk.eco",
+            "certificate_hash": "425877d68b06808501bf29463e1dc4511e2de68e"
+          }
+        },
+        {
+          "client_id": "316418610606-9nelk9576vmu3rd3fm193dflcs3b5an6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXHiPXQlNHcSfWZHG15QydiY84IJnS6TY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "316418610606-9nelk9576vmu3rd3fm193dflcs3b5an6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:316418610606:android:03eb8d51f57448f612643f",
         "android_client_info": {
           "package_name": "com.tmk.ecosurvival"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "316418610606-dmg26lhqih7204om48lrmltgtmdauh7o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tmk.ecosurvival",
+            "certificate_hash": "7022d4f0d3b54ea2118a16d02723f636039a2843"
+          }
+        },
+        {
+          "client_id": "316418610606-e1s27ri1rf0chsih2iij0hk1bpfcv3sr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tmk.ecosurvival",
+            "certificate_hash": "425877d68b06808501bf29463e1dc4511e2de68e"
+          }
+        },
         {
           "client_id": "316418610606-9nelk9576vmu3rd3fm193dflcs3b5an6.apps.googleusercontent.com",
           "client_type": 3

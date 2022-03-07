@@ -113,7 +113,7 @@ class _NewChatState extends State<NewChat> {
       width: width * 0.9,
       child: InkWell(
         onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
               builder: (context) => ChattingScreen(
                   appUser: user, currentUser: CurrentAppUser.currentUserData)));
         },

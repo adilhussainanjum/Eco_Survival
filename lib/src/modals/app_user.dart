@@ -13,7 +13,7 @@ class AppUser {
   double lat;
   double lng;
   String role;
-  List<dynamic> messages;
+  List<dynamic> messages = [];
 
   AppUser(
       {this.uid,
@@ -26,6 +26,7 @@ class AppUser {
       this.centerLocation,
       this.centerName,
       this.lat,
+      this.messages,
       this.lng,
       this.role});
 
